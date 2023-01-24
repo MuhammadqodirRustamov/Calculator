@@ -29,9 +29,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonEQUAL:Button
 
     private lateinit var hisobla:TextView
-    private lateinit var javob:TextView
+    private lateinit var input:TextView
 
     private var current = "0"
+    private var ozi_bor = ""
+    private var isCurrentMINUS = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         buttonEQUAL = findViewById(R.id.buttonEQUAL)
 
         hisobla = findViewById(R.id.hisobla)
-        javob = findViewById(R.id.javob)
+        input = findViewById(R.id.javob)
 
         button1.setOnClickListener {
             add("1")
@@ -91,22 +93,152 @@ class MainActivity : AppCompatActivity() {
             add("0")
         }
         buttonPOINT.setOnClickListener {
-            addPOINT()
+            //addPOINT()
+            POINT()
         }
+
+        buttonBACKSPACE.setOnClickListener {
+           //BACKSPACE()
+        }
+
+        buttonPLS_MNS.setOnClickListener {
+            //PLS_MNS()
+        }
+
+        buttonCCCCC.setOnClickListener {
+            //CCCCC()
+            CCCCCc()
+        }
+
+        buttonPLUS.setOnClickListener {
+            //OPERATIONS("+")
+            operations("+")
+        }
+        buttonMINUS.setOnClickListener {
+            //OPERATIONS("-")
+            operations("-")
+        }
+        buttonMULTIPLY.setOnClickListener {
+            //OPERATIONS("×")
+            operations("×")
+        }
+        buttonDIVIDE.setOnClickListener {
+            //OPERATIONS("÷")
+            operations("÷")
+        }
+
 
 
     }
 
-    @SuppressLint("SetTextI18n")
+    fun operations(nima:String){
+        if (current == "") {
+            ozi_bor = ozi_bor
+        }else{
+            ozi_bor += nima
+            current = ""
+            SET()
+        }
+    }
+
+
     fun add(son : String){
+        if (current == "0") current = ""
+        if (ozi_bor == "0") ozi_bor = ""
         current += son
-        hisobla.text = current
+        ozi_bor += son
+        SET()
     }
-    fun addPOINT(){
-        if (!current.contains('.')){
-            current += "."
-            hisobla.text = current
-        }
+
+    fun POINT(){
+        if (current.contains(".")) return
+        ozi_bor += "."
+        current += "."
+        SET()
     }
+
+
+    fun CCCCCc(){
+        ozi_bor = "0"
+        current = "0"
+        SET()
+    }
+
+
+    fun SET(){
+        hisobla.text = ozi_bor
+    }
+
+//
+//    fun CCCCC(){
+//        ozi_bor = ""
+//        current = "0"
+//        isCurrentMINUS = false
+//        setHisoblaJAVOB()
+//    }
+//
+//    fun PLS_MNS(){
+//        if (current == "0") return
+//        if (isCurrentMINUS){
+//            isCurrentMINUS = false
+//        }else{
+//            isCurrentMINUS = true
+//        }
+//        setHisoblaJAVOB()
+//    }
+//
+//    fun BACKSPACE(){
+//        if (current.length > 0) current = current.substring(0, current.length-1)
+//        if (current == "") {
+//            current = "0"
+//            isCurrentMINUS = false
+//        }
+//
+//        setHisoblaJAVOB()
+//
+//    }
+//
+//    @SuppressLint("SetTextI18n")
+//    fun add(son : String){
+//        if (current == "0") current = ""
+//        current += son
+//        input.text = current
+//        setHisoblaJAVOB()
+//    }
+//    fun addPOINT(){
+//        if (!current.contains('.')){
+//            current += "."
+//            hisobla.text = current
+//            setHisoblaJAVOB()
+//
+//        }
+//    }
+//    @SuppressLint("SetTextI18n")
+//    fun setHisoblaJAVOB(){
+//        if (isCurrentMINUS){
+//            hisobla.text = ozi_bor + "(-" + current + ")"
+//            input.text = "-" + current
+//        }else{
+//            hisobla.text = ozi_bor + current
+//            input.text = current
+//        }
+//
+//
+//    }
+//
+//    fun OPERATIONS(nima:String){
+//        if (current == "0") return
+//        if (isCurrentMINUS){
+//            ozi_bor = ozi_bor + "(-" + current + ")" + nima
+//        }else{
+//            ozi_bor = ozi_bor + current + nima
+//        }
+//        current = "0"
+//
+//
+//        setHisoblaJAVOB()
+//
+//    }
+
 
 }

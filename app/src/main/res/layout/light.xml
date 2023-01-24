@@ -316,11 +316,12 @@
         android:id="@+id/javob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="60sp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/worksans_medium"
-        android:textAlignment="gravity"
         android:text="@string/_1_258_2"
-        android:textColor="@color/black"
+        android:textAlignment="gravity"
+        android:textColor="#878686"
+        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline3" />
@@ -340,8 +341,8 @@
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/worksans_medium"
         android:text="@string/_6_295_5"
-        android:textColor="#878686"
-        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent" />
 
