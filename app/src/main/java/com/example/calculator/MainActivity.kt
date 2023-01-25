@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonPOINT: Button
     private lateinit var buttonBACKSPACE: Button
     private lateinit var buttonCCCCC: Button
-    private lateinit var buttonPLSMNS: Button
+    private lateinit var buttonPLS_MNS: Button
     private lateinit var buttonPERCENT: Button
     private lateinit var buttonPLUS: Button
     private lateinit var buttonMINUS: Button
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         buttonPOINT = findViewById(R.id.buttonPOINT)
         buttonBACKSPACE = findViewById(R.id.buttonBACKSPACE)
         buttonCCCCC = findViewById(R.id.buttonCCCCC)
-        buttonPLSMNS = findViewById(R.id.buttonPLS_MNS)
+        buttonPLS_MNS = findViewById(R.id.buttonPLS_MNS)
         buttonPERCENT = findViewById(R.id.buttonPERCENT)
         buttonPLUS = findViewById(R.id.buttonPLUS)
         buttonMINUS = findViewById(R.id.buttonMINUS)
@@ -94,10 +94,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonBACKSPACE.setOnClickListener {
-            backspace()
+
         }
 
-        buttonPLSMNS.setOnClickListener {
+        buttonPLS_MNS.setOnClickListener {
             pls_mns()
         }
 
@@ -126,9 +126,9 @@ class MainActivity : AppCompatActivity() {
     private var all = ArrayList<Any>()
 
 
-    private fun hasPoint(): Boolean { return current.contains('.') }
-    private fun hasAmal(): Boolean { return current == "" }
-    private fun isManfiy(): Boolean {return current[0] == '-'}
+    fun hasPoint(): Boolean { return current.contains('.') }
+    fun hasAmal(): Boolean { return current == "" }
+    fun isManfiy(): Boolean {return current[0] == '-'}
 
 
     fun clear() {
@@ -137,30 +137,11 @@ class MainActivity : AppCompatActivity() {
         update()
     }
 
-    fun backspace(){
-        if (all.size==0 && current == "0") return
-
-        if (current.isEmpty()){
-            all.removeAt(all.size-1)
-            current = all[all.size-1].toString()
-            all.removeAt(all.size-1)
-
-        }else{
-            current = current.substring(0, current.length-1)
-        }
-        if (current == "-") current = ""
-        if (all.size == 0 && current == "") current = "0"
-
-
-        update()
-    }
-
     fun add(nima: String) {
         if (nima == "." && hasPoint()) return
         if (current == "0") current = ""
         if (nima == "." && current.isEmpty()) current += "0"
         current += nima
-        if (nima != ".") result.text = calculate()
         update()
     }
 
@@ -171,7 +152,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
         if (current.last() == '.') current = current.substring(0, current.length-1)
-        all.add(current.toDouble())
+        all.add(current)
         all.add(nima)
         current = ""
         update()
@@ -184,26 +165,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun calculate(): String {
-        hisobla1()
+        step1()
 
         return "123"
     }
 
-
-    private fun hisobla1(): ArrayList<Any> {
-        val list = all
-        if (!list.contains("÷") && !list.contains("×")) {
-            return list
-        }
+    fun step1(): ArrayList<Any> {
+        var list = all
         list.add(current)
-        var j = 1
+        if (!list.contains("÷") && !list.contains("×")) return list
+
+        var j = 0
         while (j < list.size){
             val i = list[j]
-            Log.d("TAG", list.toString())
-
             if (i == "÷" || i == "×"){
-                val bir = list[j-1].toString().toDouble()
-                val ikki = list[j+1].toString().toDouble()
+                var bir = list[j-1] as Double
+                var ikki = list[j+1] as Double
                 var res:Double
                 if (i == "×") res = bir*ikki
                 else res = bir/ikki
@@ -213,6 +190,8 @@ class MainActivity : AppCompatActivity() {
             }
             j++
         }
+        Log.d("TAG", list.toString())
+
         return list
 
 
@@ -226,14 +205,14 @@ class MainActivity : AppCompatActivity() {
         var returnVal = ""
         if (all.size == 0) return current
         for (j in all.indices) {
-            val i = all[j]
+            var  i = all[j]
             if (i.toString().length > 1 && i.toString().contains('-') && j != 0) {
-                returnVal += "($i)"
+                returnVal += "(" + i.toString() + ")"
             } else {
                 returnVal += i.toString()
             }
         }
-        if (current.contains('-')) returnVal += "($current)"
+        if (current.contains('-')) returnVal += "(" + current + ")"
         else returnVal += current
         return returnVal
     }
@@ -241,6 +220,7 @@ class MainActivity : AppCompatActivity() {
 
     fun update() {
         enter.text = getTEXT()
+        result.text = calculate()
     }
 
 
