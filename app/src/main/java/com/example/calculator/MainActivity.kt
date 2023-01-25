@@ -141,7 +141,8 @@ class MainActivity : AppCompatActivity() {
         if (nima == "." && hasPoint()) return
         if (current == "0") current = ""
         if (nima == "." && current.isEmpty()) current += "0"
-        current += nima
+        if (nima != ".") current += nima
+        //calculate()
         update()
     }
 
@@ -170,17 +171,24 @@ class MainActivity : AppCompatActivity() {
         return "123"
     }
 
+
     fun step1(): ArrayList<Any> {
         var list = all
         list.add(current)
-        if (!list.contains("÷") && !list.contains("×")) return list
+        if (!list.contains("÷") && !list.contains("×")) {
+            Log.d("TAG", list.toString())
+            return list
+        }
 
         var j = 0
         while (j < list.size){
+
             val i = list[j]
+            Log.d("ishladi", i.toString())
+
             if (i == "÷" || i == "×"){
-                var bir = list[j-1] as Double
-                var ikki = list[j+1] as Double
+                val bir = list[j-1] as Double
+                val ikki = list[j+1] as Double
                 var res:Double
                 if (i == "×") res = bir*ikki
                 else res = bir/ikki
@@ -190,8 +198,6 @@ class MainActivity : AppCompatActivity() {
             }
             j++
         }
-        Log.d("TAG", list.toString())
-
         return list
 
 
@@ -220,7 +226,6 @@ class MainActivity : AppCompatActivity() {
 
     fun update() {
         enter.text = getTEXT()
-        result.text = calculate()
     }
 
 
