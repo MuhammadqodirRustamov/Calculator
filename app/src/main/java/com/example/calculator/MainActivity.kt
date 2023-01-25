@@ -1,39 +1,36 @@
 package com.example.calculator
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var button1:Button
-    private lateinit var button2:Button
-    private lateinit var button3:Button
-    private lateinit var button4:Button
-    private lateinit var button5:Button
-    private lateinit var button6:Button
-    private lateinit var button7:Button
-    private lateinit var button8:Button
-    private lateinit var button9:Button
-    private lateinit var button0:Button
-    private lateinit var buttonPOINT:Button
-    private lateinit var buttonBACKSPACE:Button
-    private lateinit var buttonCCCCC:Button
-    private lateinit var buttonPLS_MNS:Button
-    private lateinit var buttonPERCENT:Button
-    private lateinit var buttonPLUS:Button
-    private lateinit var buttonMINUS:Button
-    private lateinit var buttonMULTIPLY:Button
-    private lateinit var buttonDIVIDE:Button
-    private lateinit var buttonEQUAL:Button
+    private lateinit var button1: Button
+    private lateinit var button2: Button
+    private lateinit var button3: Button
+    private lateinit var button4: Button
+    private lateinit var button5: Button
+    private lateinit var button6: Button
+    private lateinit var button7: Button
+    private lateinit var button8: Button
+    private lateinit var button9: Button
+    private lateinit var button0: Button
+    private lateinit var buttonPOINT: Button
+    private lateinit var buttonBACKSPACE: Button
+    private lateinit var buttonCCCCC: Button
+    private lateinit var buttonPLS_MNS: Button
+    private lateinit var buttonPERCENT: Button
+    private lateinit var buttonPLUS: Button
+    private lateinit var buttonMINUS: Button
+    private lateinit var buttonMULTIPLY: Button
+    private lateinit var buttonDIVIDE: Button
+    private lateinit var buttonEQUAL: Button
 
-    private lateinit var hisobla:TextView
-    private lateinit var input:TextView
+    private lateinit var enter: TextView
+    private lateinit var result: TextView
 
-    private var current = "0"
-    private var ozi_bor = ""
-    private var isCurrentMINUS = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +56,8 @@ class MainActivity : AppCompatActivity() {
         buttonDIVIDE = findViewById(R.id.buttonDIVIDE)
         buttonEQUAL = findViewById(R.id.buttonEQUAL)
 
-        hisobla = findViewById(R.id.hisobla)
-        input = findViewById(R.id.javob)
+        enter = findViewById(R.id.hisobla)
+        result = findViewById(R.id.javob)
 
         button1.setOnClickListener {
             add("1")
@@ -93,81 +90,178 @@ class MainActivity : AppCompatActivity() {
             add("0")
         }
         buttonPOINT.setOnClickListener {
-            //addPOINT()
-            POINT()
+            add(".")
         }
 
         buttonBACKSPACE.setOnClickListener {
-           //BACKSPACE()
+
         }
 
         buttonPLS_MNS.setOnClickListener {
-            //PLS_MNS()
+            pls_mns()
         }
 
         buttonCCCCC.setOnClickListener {
-            //CCCCC()
-            CCCCCc()
+            clear()
         }
 
         buttonPLUS.setOnClickListener {
-            //OPERATIONS("+")
-            operations("+")
+            amal("+")
         }
         buttonMINUS.setOnClickListener {
-            //OPERATIONS("-")
-            operations("-")
+            amal("-")
         }
         buttonMULTIPLY.setOnClickListener {
-            //OPERATIONS("×")
-            operations("×")
+            amal("×")
         }
         buttonDIVIDE.setOnClickListener {
-            //OPERATIONS("÷")
-            operations("÷")
+            amal("÷")
         }
 
 
-
-    }
-
-    fun operations(nima:String){
-        if (current == "") {
-            ozi_bor = ozi_bor
-        }else{
-            ozi_bor += nima
-            current = ""
-            SET()
-        }
     }
 
 
-    fun add(son : String){
-        if (current == "0") current = ""
-        if (ozi_bor == "0") ozi_bor = ""
-        current += son
-        ozi_bor += son
-        SET()
-    }
-
-    fun POINT(){
-        if (current.contains(".")) return
-        ozi_bor += "."
-        current += "."
-        SET()
-    }
+    private var current = "0"
+    private var all = ArrayList<Any>()
 
 
-    fun CCCCCc(){
-        ozi_bor = "0"
+    fun hasPoint(): Boolean { return current.contains('.') }
+    fun hasAmal(): Boolean { return current == "" }
+    fun isManfiy(): Boolean {return current[0] == '-'}
+
+
+    fun clear() {
+        all.clear()
         current = "0"
-        SET()
+        update()
+    }
+
+    fun add(nima: String) {
+        if (nima == "." && hasPoint()) return
+        if (current == "0") current = ""
+        if (nima == "." && current.isEmpty()) current += "0"
+        current += nima
+        update()
+    }
+
+    fun amal(nima: String) {
+        if (hasAmal()) {
+            all[all.size-1] = nima
+            update()
+            return
+        }
+        if (current.last() == '.') current = current.substring(0, current.length-1)
+        all.add(current)
+        all.add(nima)
+        current = ""
+        update()
+    }
+
+    fun pls_mns(){
+        if (current.isEmpty() || current == "0") return
+        current = if (isManfiy()) current.substring(1, current.length) else "-" + current
+        update()
+    }
+
+    fun calculate(): String {
+        step1()
+
+        return "123"
+    }
+
+    fun step1(): ArrayList<Any> {
+        var list = all
+        list.add(current)
+        if (!list.contains("÷") && !list.contains("×")) return list
+
+        var j = 0
+        while (j < list.size){
+            val i = list[j]
+            if (i == "÷" || i == "×"){
+                var bir = list[j-1] as Double
+                var ikki = list[j+1] as Double
+                var res:Double
+                if (i == "×") res = bir*ikki
+                else res = bir/ikki
+                list[j-1] = res
+                list.removeAt(j)
+                list.removeAt(j)
+            }
+            j++
+        }
+        Log.d("TAG", list.toString())
+
+        return list
+
+
     }
 
 
-    fun SET(){
-        hisobla.text = ozi_bor
+
+
+
+    fun getTEXT(): String {
+        var returnVal = ""
+        if (all.size == 0) return current
+        for (j in all.indices) {
+            var  i = all[j]
+            if (i.toString().length > 1 && i.toString().contains('-') && j != 0) {
+                returnVal += "(" + i.toString() + ")"
+            } else {
+                returnVal += i.toString()
+            }
+        }
+        if (current.contains('-')) returnVal += "(" + current + ")"
+        else returnVal += current
+        return returnVal
     }
+
+
+    fun update() {
+        enter.text = getTEXT()
+        result.text = calculate()
+    }
+
+
+//
+//    fun operations(nima:String){
+//        if (current == "") {
+//            ozi_bor = ozi_bor
+//        }else{
+//            ozi_bor += nima
+//            current = ""
+//            SET()
+//        }
+//    }
+//
+//
+//    fun add(son : String){
+//        if (current == "0") current = ""
+//        if (ozi_bor == "0") ozi_bor = ""
+//        current += son
+//        ozi_bor += son
+//        SET()
+//    }
+//
+//    fun POINT(){
+//        if (current.contains(".")) return
+//        ozi_bor += "."
+//        current += "."
+//        SET()
+//    }
+//
+//
+//    fun CCCCCc(){
+//        ozi_bor = "0"
+//        current = "0"
+//        SET()
+//    }
+//
+//
+//    fun SET(){
+//        hisobla.text = ozi_bor
+//    }
 
 //
 //    fun CCCCC(){
