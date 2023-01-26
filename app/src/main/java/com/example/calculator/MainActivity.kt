@@ -2,6 +2,7 @@ package com.example.calculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var enter: TextView
     private lateinit var result: TextView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.light)
@@ -57,164 +59,325 @@ class MainActivity : AppCompatActivity() {
         enter = findViewById(R.id.hisobla)
         result = findViewById(R.id.javob)
 
-        button1.setOnClickListener {add("1") }
-        button2.setOnClickListener { add("2") }
-        button3.setOnClickListener { add("3") }
-        button4.setOnClickListener { add("4") }
-        button5.setOnClickListener { add("5") }
-        button6.setOnClickListener { add("6") }
-        button7.setOnClickListener { add("7") }
-        button8.setOnClickListener { add("8") }
-        button9.setOnClickListener { add("9") }
-        button0.setOnClickListener { add("0") }
-        buttonPOINT.setOnClickListener { add(".") }
+        button1.setOnClickListener {
+            add("1")
+        }
+        button2.setOnClickListener {
+            add("2")
+        }
+        button3.setOnClickListener {
+            add("3")
+        }
+        button4.setOnClickListener {
+            add("4")
+        }
+        button5.setOnClickListener {
+            add("5")
+        }
+        button6.setOnClickListener {
+            add("6")
+        }
+        button7.setOnClickListener {
+            add("7")
+        }
+        button8.setOnClickListener {
+            add("8")
+        }
+        button9.setOnClickListener {
+            add("9")
+        }
+        button0.setOnClickListener {
+            add("0")
+        }
+        buttonPOINT.setOnClickListener {
+            add(".")
+        }
 
-        buttonBACKSPACE.setOnClickListener { backspace() }
-        buttonPLSMNS.setOnClickListener { negativePositive() }
-        buttonCCCCC.setOnClickListener { clear() }
-        buttonPLUS.setOnClickListener { amal("+") }
-        buttonMINUS.setOnClickListener { amal("-") }
-        buttonMULTIPLY.setOnClickListener { amal("×") }
-        buttonDIVIDE.setOnClickListener { amal("÷") }
-        buttonPERCENT.setOnClickListener{ percent() }
+        buttonBACKSPACE.setOnClickListener {
+            backspace()
+        }
+
+        buttonPLSMNS.setOnClickListener {
+            pls_mns()
+        }
+
+        buttonCCCCC.setOnClickListener {
+            clear()
+        }
+
+        buttonPLUS.setOnClickListener {
+            amal("+")
+        }
+        buttonMINUS.setOnClickListener {
+            amal("-")
+        }
+        buttonMULTIPLY.setOnClickListener {
+            amal("×")
+        }
+        buttonDIVIDE.setOnClickListener {
+            amal("÷")
+        }
+
+
     }
 
+
     private var current = "0"
-    private var all = ArrayList<String>()
+    private var all = ArrayList<Any>()
+
 
     private fun hasPoint(): Boolean { return current.contains('.') }
     private fun hasAmal(): Boolean { return current == "" }
-    private fun isNegative(): Boolean {return current[0] == '-'}
-
-    private fun getAll(): MutableList<String> {return all.toMutableList()}
-    private fun update() { enter.text = getTEXT() }
-    private fun setResult(){ if (all.size > 0 && current != "") result.text = calculate() else result.text = "" }
+    private fun isManfiy(): Boolean {return current[0] == '-'}
 
 
-    private fun backspace(){
-        if (current == "0" && all.size == 0) return
-        if (current == "-") current = ""
-        if (current != ""){
-            current = current.substring(0, current.length-1)
-            if (current == "" && all.size == 0) current = "0"
-        }else{
-            all.removeAt(all.size-1)
-            current = all[all.size-1]
-            all.removeAt(all.size-1)
-        }
-        if (current == "-") current = ""
-        if (current == "" && all.size == 0) current = "0"
-        setResult()
-        update()
-    }
-
-    private fun clear() {
+    fun clear() {
         all.clear()
         current = "0"
-        result.text = ""
         update()
     }
 
-    private fun add(nima: String) {
+    fun backspace(){
+        if (all.size==0 && current == "0") return
+
+        if (current.isEmpty()){
+            all.removeAt(all.size-1)
+            current = all[all.size-1].toString()
+            all.removeAt(all.size-1)
+
+        }else{
+            current = current.substring(0, current.length-1)
+        }
+        if (current == "-") current = ""
+        if (all.size == 0 && current == "") current = "0"
+
+
+        update()
+    }
+
+    fun add(nima: String) {
         if (nima == "." && hasPoint()) return
         if (current == "0") current = ""
         if (nima == "." && current.isEmpty()) current += "0"
+<<<<<<<<< Temporary merge branch 1
+        if (nima != ".") current += nima
+        //calculate()
+=========
         current += nima
-        setResult()
+        if (nima != ".") result.text = calculate()
+>>>>>>>>> Temporary merge branch 2
         update()
     }
 
-    private fun amal(nima: String) {
+    fun amal(nima: String) {
         if (hasAmal()) {
             all[all.size-1] = nima
             update()
             return
         }
         if (current.last() == '.') current = current.substring(0, current.length-1)
-        all.add(current)
+        all.add(current.toDouble())
         all.add(nima)
         current = ""
         update()
     }
 
-    private fun percent(){
-        if (current == "") return
-        if (all.size == 0) return
-        if (all[all.size-1] != "÷") all[all.size-1] = "×"
-        var myNum = current.toDouble()
-        myNum /= 100
-        current = myNum.toString()
-        setResult()
-        update()
-    }
-
-    private fun negativePositive(){
+    fun pls_mns(){
         if (current.isEmpty() || current == "0") return
-        current = if (isNegative()) current.substring(1, current.length) else "-$current"
-        setResult()
+        current = if (isManfiy()) current.substring(1, current.length) else "-" + current
         update()
     }
 
-    private fun calculate(): String {
-        return step2(step1(getAll()))
+    fun calculate(): String {
+        hisobla1()
+
+        return "123"
     }
 
-    private fun step1(list: MutableList<String>): MutableList<String> {
-        if (!list.contains("÷") && !list.contains("×")) return list
+<<<<<<<<< Temporary merge branch 1
+
+    fun step1(): ArrayList<Any> {
+        var list = all
         list.add(current)
-        var j = 0
+        if (!list.contains("÷") && !list.contains("×")) {
+            Log.d("TAG", list.toString())
+            return list
+        }
+=========
+>>>>>>>>> Temporary merge branch 2
+
+    private fun hisobla1(): ArrayList<Any> {
+        val list = all
+        if (!list.contains("÷") && !list.contains("×")) {
+            return list
+        }
+        list.add(current)
+        var j = 1
         while (j < list.size){
+
             val i = list[j]
+<<<<<<<<< Temporary merge branch 1
+            Log.d("ishladi", i.toString())
+
             if (i == "÷" || i == "×"){
-                val first = list[j-1].toDouble()
-                val second = list[j+1].toDouble()
-                val res:Double = if (i == "×") first*second
-                else first/second
-                list[j-1] = if ((res % 1).toFloat() == (0).toFloat()) res.toInt().toString() else res.toString()
+                val bir = list[j-1] as Double
+                val ikki = list[j+1] as Double
+=========
+            Log.d("TAG", list.toString())
+
+            if (i == "÷" || i == "×"){
+                val bir = list[j-1].toString().toDouble()
+                val ikki = list[j+1].toString().toDouble()
+>>>>>>>>> Temporary merge branch 2
+                var res:Double
+                if (i == "×") res = bir*ikki
+                else res = bir/ikki
+                list[j-1] = res
                 list.removeAt(j)
                 list.removeAt(j)
-                j-=2
             }
             j++
         }
         return list
+
+
     }
 
-    private fun step2(list: MutableList<String>): String {
-        if (!list.contains("+") && !list.contains("-")) return list[0]
-        list.add(current)
-        var j = 0
-        while (j < list.size) {
-            val i = list[j]
-            if (i == "+" || i == "-") {
-                val first = list[j - 1].toDouble()
-                val second = list[j + 1].toDouble()
-                val res: Double = if (i == "+") first + second
-                else first - second
-                list[j - 1] = if ((res % 1).toFloat() == (0).toFloat()) res.toInt()
-                    .toString() else res.toString()
-                list.removeAt(j)
 
-                list.removeAt(j)
-            }
-            j++
-        }
-        return list[0]
-    }
 
-    private fun getTEXT(): String {
+
+
+    fun getTEXT(): String {
         var returnVal = ""
         if (all.size == 0) return current
         for (j in all.indices) {
             val i = all[j]
-            returnVal += if (i.length > 1 && i.contains('-') && j != 0) {
-                "($i)"
+            if (i.toString().length > 1 && i.toString().contains('-') && j != 0) {
+                returnVal += "($i)"
             } else {
-                i
+                returnVal += i.toString()
             }
         }
-        returnVal += if (current.contains('-')) "($current)"
-        else current
+        if (current.contains('-')) returnVal += "($current)"
+        else returnVal += current
         return returnVal
     }
+
+
+    fun update() {
+        enter.text = getTEXT()
+    }
+
+
+//
+//    fun operations(nima:String){
+//        if (current == "") {
+//            ozi_bor = ozi_bor
+//        }else{
+//            ozi_bor += nima
+//            current = ""
+//            SET()
+//        }
+//    }
+//
+//
+//    fun add(son : String){
+//        if (current == "0") current = ""
+//        if (ozi_bor == "0") ozi_bor = ""
+//        current += son
+//        ozi_bor += son
+//        SET()
+//    }
+//
+//    fun POINT(){
+//        if (current.contains(".")) return
+//        ozi_bor += "."
+//        current += "."
+//        SET()
+//    }
+//
+//
+//    fun CCCCCc(){
+//        ozi_bor = "0"
+//        current = "0"
+//        SET()
+//    }
+//
+//
+//    fun SET(){
+//        hisobla.text = ozi_bor
+//    }
+
+//
+//    fun CCCCC(){
+//        ozi_bor = ""
+//        current = "0"
+//        isCurrentMINUS = false
+//        setHisoblaJAVOB()
+//    }
+//
+//    fun PLS_MNS(){
+//        if (current == "0") return
+//        if (isCurrentMINUS){
+//            isCurrentMINUS = false
+//        }else{
+//            isCurrentMINUS = true
+//        }
+//        setHisoblaJAVOB()
+//    }
+//
+//    fun BACKSPACE(){
+//        if (current.length > 0) current = current.substring(0, current.length-1)
+//        if (current == "") {
+//            current = "0"
+//            isCurrentMINUS = false
+//        }
+//
+//        setHisoblaJAVOB()
+//
+//    }
+//
+//    @SuppressLint("SetTextI18n")
+//    fun add(son : String){
+//        if (current == "0") current = ""
+//        current += son
+//        input.text = current
+//        setHisoblaJAVOB()
+//    }
+//    fun addPOINT(){
+//        if (!current.contains('.')){
+//            current += "."
+//            hisobla.text = current
+//            setHisoblaJAVOB()
+//
+//        }
+//    }
+//    @SuppressLint("SetTextI18n")
+//    fun setHisoblaJAVOB(){
+//        if (isCurrentMINUS){
+//            hisobla.text = ozi_bor + "(-" + current + ")"
+//            input.text = "-" + current
+//        }else{
+//            hisobla.text = ozi_bor + current
+//            input.text = current
+//        }
+//
+//
+//    }
+//
+//    fun OPERATIONS(nima:String){
+//        if (current == "0") return
+//        if (isCurrentMINUS){
+//            ozi_bor = ozi_bor + "(-" + current + ")" + nima
+//        }else{
+//            ozi_bor = ozi_bor + current + nima
+//        }
+//        current = "0"
+//
+//
+//        setHisoblaJAVOB()
+//
+//    }
+
+
 }
