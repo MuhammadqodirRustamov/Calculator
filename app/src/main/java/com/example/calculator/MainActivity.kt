@@ -207,13 +207,32 @@ class MainActivity : AppCompatActivity() {
         for (j in all.indices) {
             val i = all[j]
             returnVal += if (i.length > 1 && i.contains('-') && j != 0) {
-                "($i)"
+                "(${space(i)})"
             } else {
-                i
+                space(i)
             }
         }
-        returnVal += if (current.contains('-')) "($current)"
-        else current
+        returnVal += if (current.contains('-')) "(${space(current)})"
+        else space(current)
         return returnVal
+    }
+
+    private fun space(nimA: String): String {
+        var nima = nimA
+        if (nima.length < 4) return nima
+        var endIndex = nima.length-1
+        if (nima.contains('.')){
+            endIndex = nima.indexOf('.')-1
+        }
+        var index = endIndex - 2
+        while (index > 0){
+            if (nima[index-1] == '-') break
+            val first = nima.substring(0, index)
+            val last = nima.substring(index, nima.length)
+            nima = "$first $last"
+            index-= 3
+
+        }
+        return nima
     }
 }
