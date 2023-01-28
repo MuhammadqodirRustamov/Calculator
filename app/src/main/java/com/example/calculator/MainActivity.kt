@@ -1,8 +1,10 @@
 package com.example.calculator
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.widget.Button
 import android.widget.TextView
 
@@ -79,6 +81,7 @@ class MainActivity : AppCompatActivity() {
         buttonMULTIPLY.setOnClickListener { amal("×") }
         buttonDIVIDE.setOnClickListener { amal("÷") }
         buttonPERCENT.setOnClickListener{ percent() }
+        buttonEQUAL.setOnClickListener { equal() }
     }
 
     private var current = "0"
@@ -90,10 +93,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun getAll(): MutableList<String> {return all.toMutableList()}
     private fun update() {
-        if (enter.text.length > 20) enter.setTextSize()
-        enter.text = getTEXT() }
+        enter.text = getTEXT()
+        if (enter.text.length > 14) enter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32F)
+        else if (enter.text.length > 28) enter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24F)
+        else if (enter.text.length > 42) enter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18F)
+    }
+    private var gotResult = false
     private fun setResult(){ if (all.size > 0 && current != "") result.text = calculate() else result.text = "" }
 
+
+    private fun equal(){
+        if (!gotResult){
+            all.clear()
+            current = "0"
+
+            result.textSize = 36F
+            result.setTextColor(Color.BLACK)
+
+            enter.setTextColor(Color.GRAY)
+            enter.textSize = 14F
+            gotResult = true
+        }
+    }
 
     private fun backspace(){
         if (current == "0" && all.size == 0) return
@@ -119,6 +140,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun add(nima: String) {
+
         if (nima == "." && hasPoint()) return
         if (current == "0") current = ""
         if (nima == "." && current.isEmpty()) current += "0"
