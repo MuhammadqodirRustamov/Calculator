@@ -2,6 +2,7 @@ package com.example.calculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var result: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("TAG", Double.MIN_VALUE.toString())
         super.onCreate(savedInstanceState)
         setContentView(R.layout.light)
         button1 = findViewById(R.id.button1)
@@ -87,7 +89,9 @@ class MainActivity : AppCompatActivity() {
     private fun isNegative(): Boolean {return current[0] == '-'}
 
     private fun getAll(): MutableList<String> {return all.toMutableList()}
-    private fun update() { enter.text = getTEXT() }
+    private fun update() {
+        if (enter.text.length > 20) enter.setTextSize()
+        enter.text = getTEXT() }
     private fun setResult(){ if (all.size > 0 && current != "") result.text = calculate() else result.text = "" }
 
 
@@ -193,8 +197,8 @@ class MainActivity : AppCompatActivity() {
                 list[j - 1] = if ((res % 1).toFloat() == (0).toFloat()) res.toInt()
                     .toString() else res.toString()
                 list.removeAt(j)
-
                 list.removeAt(j)
+                j-=2
             }
             j++
         }
@@ -203,7 +207,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getTEXT(): String {
         var returnVal = ""
-        if (all.size == 0) return current
+        if (all.size == 0) return space(current)
         for (j in all.indices) {
             val i = all[j]
             returnVal += if (i.length > 1 && i.contains('-') && j != 0) {
