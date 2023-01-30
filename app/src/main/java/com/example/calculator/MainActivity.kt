@@ -164,7 +164,6 @@ class MainActivity : AppCompatActivity() {
         if (done){
             reset()
             done = false
-            return
         }
         if (nima == "." && hasPoint()) return
         if (current == "0") current = ""
