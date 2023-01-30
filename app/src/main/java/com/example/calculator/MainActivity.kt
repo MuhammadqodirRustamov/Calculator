@@ -98,12 +98,24 @@ class MainActivity : AppCompatActivity() {
         else if (enter.text.length > 28) enter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24F)
         else if (enter.text.length > 42) enter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18F)
     }
-    private var gotResult = false
     private fun setResult(){ if (all.size > 0 && current != "") result.text = calculate() else result.text = "" }
+
+    private var done = false
+
+    private fun reset(){
+        result.text = ""
+
+        enter.textSize = 40F
+        enter.setTextColor(Color.BLACK)
+
+        result.textSize = 24F
+        result.setTextColor(Color.GRAY)
+    }
 
 
     private fun equal(){
-        if (!gotResult){
+        if (all.size==0)return
+        if (!done){
             all.clear()
             current = "0"
 
@@ -112,11 +124,16 @@ class MainActivity : AppCompatActivity() {
 
             enter.setTextColor(Color.GRAY)
             enter.textSize = 14F
-            gotResult = true
+            done = true
         }
     }
 
     private fun backspace(){
+        if(done){
+            reset()
+            done = false
+            update()
+        }
         if (current == "0" && all.size == 0) return
         if (current == "-") current = ""
         if (current != ""){
@@ -136,11 +153,19 @@ class MainActivity : AppCompatActivity() {
         all.clear()
         current = "0"
         result.text = ""
+        if (done){
+            reset()
+            done = false
+        }
         update()
     }
 
     private fun add(nima: String) {
-
+        if (done){
+            reset()
+            done = false
+            return
+        }
         if (nima == "." && hasPoint()) return
         if (current == "0") current = ""
         if (nima == "." && current.isEmpty()) current += "0"
@@ -150,6 +175,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun amal(nima: String) {
+        if (done){
+            done = false
+            current = result.text.toString()
+            reset()
+        }
         if (hasAmal()) {
             all[all.size-1] = nima
             update()
