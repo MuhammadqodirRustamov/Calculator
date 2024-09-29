@@ -1,12 +1,12 @@
 package com.example.calculator
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var button1: Button
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         enter = findViewById(R.id.hisobla)
         result = findViewById(R.id.javob)
 
-        button1.setOnClickListener {add("1") }
+        button1.setOnClickListener { add("1") }
         button2.setOnClickListener { add("2") }
         button3.setOnClickListener { add("3") }
         button4.setOnClickListener { add("4") }
@@ -80,29 +80,43 @@ class MainActivity : AppCompatActivity() {
         buttonMINUS.setOnClickListener { amal("-") }
         buttonMULTIPLY.setOnClickListener { amal("×") }
         buttonDIVIDE.setOnClickListener { amal("÷") }
-        buttonPERCENT.setOnClickListener{ percent() }
+        buttonPERCENT.setOnClickListener { percent() }
         buttonEQUAL.setOnClickListener { equal() }
     }
 
     private var current = "0"
-    private var all = ArrayList<String>()
+    private var operations = ArrayList<String>()
 
-    private fun hasPoint(): Boolean { return current.contains('.') }
-    private fun hasAmal(): Boolean { return current == "" }
-    private fun isNegative(): Boolean {return current[0] == '-'}
+    private fun hasPoint(): Boolean {
+        return current.contains('.')
+    }
 
-    private fun getAll(): MutableList<String> {return all.toMutableList()}
+    private fun hasAmal(): Boolean {
+        return current == ""
+    }
+
+    private fun isNegative(): Boolean {
+        return current[0] == '-'
+    }
+
+    private fun getAll(): MutableList<String> {
+        return operations.toMutableList()
+    }
+
     private fun update() {
         enter.text = getTEXT()
         if (enter.text.length > 14) enter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32F)
         else if (enter.text.length > 28) enter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24F)
         else if (enter.text.length > 42) enter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18F)
     }
-    private fun setResult(){ if (all.size > 0 && current != "") result.text = calculate() else result.text = "" }
+
+    private fun setResult() {
+        if (operations.size > 0 && current != "") result.text = calculate() else result.text = ""
+    }
 
     private var done = false
 
-    private fun reset(){
+    private fun reset() {
         result.text = ""
 
         enter.textSize = 40F
@@ -113,10 +127,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun equal(){
-        if (all.size==0)return
-        if (!done){
-            all.clear()
+    private fun equal() {
+        if (operations.size == 0) return
+        if (!done) {
+            operations.clear()
             current = "0"
 
             result.textSize = 36F
@@ -128,21 +142,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun backspace(){
-        if(done){
+    private fun backspace() {
+        if (done) {
             reset()
             done = false
             update()
         }
-        if (current == "0" && all.size == 0) return
+        if (current == "0" && operations.size == 0) return
         if (current == "-") current = ""
-        if (current != ""){
-            current = current.substring(0, current.length-1)
-            if (current == "" && all.size == 0) current = "0"
-        }else{
-            all.removeAt(all.size-1)
-            current = all[all.size-1]
-            all.removeAt(all.size-1)
+        if (current != "") {
+            current = current.substring(0, current.length - 1)
+            if (current == "" && operations.size == 0) current = "0"
+        } else {
+            operations.removeAt(operations.size - 1)
+            current = operations[operations.size - 1]
+            operations.removeAt(operations.size - 1)
         }
         if (current == "-") current = ""
         setResult()
@@ -150,10 +164,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clear() {
-        all.clear()
+        operations.clear()
         current = "0"
         result.text = ""
-        if (done){
+        if (done) {
             reset()
             done = false
         }
@@ -161,7 +175,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun add(nima: String) {
-        if (done){
+        if (done) {
             reset()
             done = false
         }
@@ -174,27 +188,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun amal(nima: String) {
-        if (done){
+        if (done) {
             done = false
             current = result.text.toString()
             reset()
         }
         if (hasAmal()) {
-            all[all.size-1] = nima
+            operations[operations.size - 1] = nima
             update()
             return
         }
-        if (current.last() == '.') current = current.substring(0, current.length-1)
-        all.add(current)
-        all.add(nima)
+        if (current.last() == '.') current = current.substring(0, current.length - 1)
+        operations.add(current)
+        operations.add(nima)
         current = ""
         update()
     }
 
-    private fun percent(){
+    private fun percent() {
         if (current == "") return
-        if (all.size == 0) return
-        if (all[all.size-1] != "÷") all[all.size-1] = "×"
+        if (operations.size == 0) return
         var myNum = current.toDouble()
         myNum /= 100
         current = myNum.toString()
@@ -202,7 +215,7 @@ class MainActivity : AppCompatActivity() {
         update()
     }
 
-    private fun negativePositive(){
+    private fun negativePositive() {
         if (current.isEmpty() || current == "0") return
         current = if (isNegative()) current.substring(1, current.length) else "-$current"
         setResult()
@@ -217,17 +230,18 @@ class MainActivity : AppCompatActivity() {
         if (!list.contains("÷") && !list.contains("×")) return list
         list.add(current)
         var j = 0
-        while (j < list.size){
+        while (j < list.size) {
             val i = list[j]
-            if (i == "÷" || i == "×"){
-                val first = list[j-1].toDouble()
-                val second = list[j+1].toDouble()
-                val res:Double = if (i == "×") first*second
-                else first/second
-                list[j-1] = if ((res % 1).toFloat() == (0).toFloat()) res.toInt().toString() else res.toString()
+            if (i == "÷" || i == "×") {
+                val first = list[j - 1].toDouble()
+                val second = list[j + 1].toDouble()
+                val res: Double = if (i == "×") first * second
+                else first / second
+                list[j - 1] = if ((res % 1).toFloat() == (0).toFloat()) res.toInt()
+                    .toString() else res.toString()
                 list.removeAt(j)
                 list.removeAt(j)
-                j-=2
+                j -= 2
             }
             j++
         }
@@ -249,7 +263,7 @@ class MainActivity : AppCompatActivity() {
                     .toString() else res.toString()
                 list.removeAt(j)
                 list.removeAt(j)
-                j-=2
+                j -= 2
             }
             j++
         }
@@ -258,9 +272,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun getTEXT(): String {
         var returnVal = ""
-        if (all.size == 0) return space(current)
-        for (j in all.indices) {
-            val i = all[j]
+        if (operations.size == 0) return space(current)
+        for (j in operations.indices) {
+            val i = operations[j]
             returnVal += if (i.length > 1 && i.contains('-') && j != 0) {
                 "(${space(i)})"
             } else {
@@ -275,17 +289,17 @@ class MainActivity : AppCompatActivity() {
     private fun space(nimA: String): String {
         var nima = nimA
         if (nima.length < 4) return nima
-        var endIndex = nima.length-1
-        if (nima.contains('.')){
-            endIndex = nima.indexOf('.')-1
+        var endIndex = nima.length - 1
+        if (nima.contains('.')) {
+            endIndex = nima.indexOf('.') - 1
         }
         var index = endIndex - 2
-        while (index > 0){
-            if (nima[index-1] == '-') break
+        while (index > 0) {
+            if (nima[index - 1] == '-') break
             val first = nima.substring(0, index)
             val last = nima.substring(index, nima.length)
             nima = "$first $last"
-            index-= 3
+            index -= 3
 
         }
         return nima
