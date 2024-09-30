@@ -26,7 +26,7 @@ A simple calculator app for Android that performs the basic mathematical operati
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Muhammadqodir/calculator-app.git
+   git clone https://github.com/MuhammadqodirRustamov/Calculator.git
    ```
 
 2. Open the project in Android Studio.
